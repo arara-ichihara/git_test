@@ -1,0 +1,16 @@
+<h1>{{question.question_text }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'polls:vote' question.id %}" method="post">
+<!-- #template/voteにpostでデータ送信 -->
+{% csrf_token %}
+<!-- #クロスサイトリクエストフォージェリ対策 -->
+{% for choice in question.choice_set.all %}
+<!-- このとき選択されているquestion.idに合うchoiceを取得している。(このquestion用choiceセット的な)_setはそれようなもの。choiceはIDとかなくても親(question.idが特定できればいけるから) -->
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+    <!-- このlabelのforはlabelのIDのイメージ。inputのidと同じものにする必要がある -->
+{% endfor %}
+<input type="submit" value="Vote">
+</form>
